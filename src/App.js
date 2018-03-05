@@ -3,6 +3,7 @@ import './App.css';
 import Router from './basic-react-router/Router';
 import Route from './basic-react-router/Route';
 import Link from './basic-react-router/Link';
+import Redirect from './basic-react-router/Redirect';
 
 class App extends Component {
   render() {
@@ -24,10 +25,16 @@ class App extends Component {
                 <code>/pacific</code>
               </Link>
             </li>
+            <li>
+              <Link to='/black-sea'>
+                <code>/black-sea</code>
+              </Link>
+            </li>
           </ul>
           <hr />
           <Route path='/atlantic' component={Atlantic} />
           <Route path='/pacific' component={Pacific} />
+          <Route path='/black-sea' component={BlackSea} />          
         </div>
       </Router>
     );
@@ -53,5 +60,38 @@ const Pacific = () => (
     </p>
   </div>
 );
+
+class BlackSea extends Component {
+  state = {
+    counter: 3,
+  };
+
+  componentDidMount() {
+    this.interval = setInterval(() => (
+      this.setState(prevState => {
+        return {
+          counter: prevState.counter - 1,
+        };
+      })
+    ), 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  render() {
+    return (
+      <div>
+        <h3>Black Sea</h3>
+        <p>Nothing to sea [sic] here</p>
+        <p>Redirect in {this.state.counter}...</p>
+        {
+          (this.state.counter < 1) ? <Redirect to='/' /> : null
+        }        
+      </div>
+    );
+  }
+};
 
 export default App;
